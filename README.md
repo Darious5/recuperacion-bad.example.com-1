@@ -18,41 +18,41 @@
 
 ### named.conf.local
 
-    We can see that in that file, the reverse zone path is `/var/lib/bin/192.168.57.dns`, we can see that the `bin` part is wrong
-    In order to fix it, we need to change `bin` to `bind`.
+We can see that in that file, the reverse zone path is `/var/lib/bin/192.168.57.dns`, we can see that the `bin` part is wrong
+In order to fix it, we need to change `bin` to `bind`.
 
-    Also, we can see that in that file, the path for the example zone is `/var/lib/bind/example.com.dns.`.
-    There is an extra period at the end that we should remove in order for it to work, it should look like this:
-    `/var/lib/bind/example.com.dns`
+Also, we can see that in that file, the path for the example zone is `/var/lib/bind/example.com.dns.`.
+There is an extra period at the end that we should remove in order for it to work, it should look like this:
+`/var/lib/bind/example.com.dns`
 
 ### named.conf.options
 
-    The recursion is disabled, because of this, it can produce some errors, so its better for us to keep it enabled.
-    change `recursion no;` to `recursion yes;`
+The recursion is disabled, because of this, it can produce some errors, so its better for us to keep it enabled.
+change `recursion no;` to `recursion yes;`
 
-    We should also add the line `allow-query { any; };` so everyone is allowed to use queries, this is because
-    bind9 may disable queries for some users, and the query could fail if that happens.
+We should also add the line `allow-query { any; };` so everyone is allowed to use queries, this is because
+bind9 may disable queries for some users, and the query could fail if that happens.
 
-    Also, if we dont need it, `dnssec-validation yes;` could give us problems, so its better to have it shut down,
-    to do that, we just change it to this: `dnssec-validation no;`
+Also, if we dont need it, `dnssec-validation yes;` could give us problems, so its better to have it shut down,
+to do that, we just change it to this: `dnssec-validation no;`
 
-    We also have to make sure that we add ; at the end of the options
+We also have to make sure that we add ; at the end of the options
 
 ### example.com.dns
 
-    The $ORIGIN is not what it should be, it is set to `$ORIGIN example.org.` when it should be a .com `$ORIGIN example.com.`
-    Use fully qualified domain names in the zone, `@     IN  NS      bad.` to `@     IN  NS      bad.example.com.`.
+The $ORIGIN is not what it should be, it is set to `$ORIGIN example.org.` when it should be a .com `$ORIGIN example.com.`
+Use fully qualified domain names in the zone, `@     IN  NS      bad.` to `@     IN  NS      bad.example.com.`.
     
 ### 192.168.57.dns
 
-    The records for the inverse zones are not fully qualified, we need to add a period at the end of them to ensure that they are.
-    `2   IN	PTR	bad.example.com 3   IN  PTR     www.example.com` to `2   IN	PTR	bad.example.com. 3   IN  PTR     www.example.com.`.
+The records for the inverse zones are not fully qualified, we need to add a period at the end of them to ensure that they are.
+`2   IN	PTR	bad.example.com 3   IN  PTR     www.example.com` to `2   IN	PTR	bad.example.com. 3   IN  PTR     www.example.com.`.
     
 ### Vagrantfile
 
-    We have to be sure that the copied files have the right permissions, so we can add to the vagrant file this lines to ensure that happens.
-    `chown bind:bind /var/lib/bind/example.com.dns /var/lib/bind/192.168.57.dns`
-    `chmod 644 /var/lib/bind/example.com.dns /var/lib/bind/192.168.57.dns`
+We have to be sure that the copied files have the right permissions, so we can add to the vagrant file this lines to ensure that happens.
+`chown bind:bind /var/lib/bind/example.com.dns /var/lib/bind/192.168.57.dns`
+`chmod 644 /var/lib/bind/example.com.dns /var/lib/bind/192.168.57.dns`
 
 ## Test
 
