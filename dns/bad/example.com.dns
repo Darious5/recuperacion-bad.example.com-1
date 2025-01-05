@@ -9,4 +9,4 @@ $TTL	86400
 $ORIGIN example.com.
 
 @     IN  NS      bad.example.com.
-bad.  IN  A       192.168.57.2
+bad  IN  A       192.168.57.2

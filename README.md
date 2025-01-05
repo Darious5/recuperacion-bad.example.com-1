@@ -42,6 +42,8 @@ We also have to make sure that we add ; at the end of the options
 
 The $ORIGIN is not what it should be, it is set to `$ORIGIN example.org.` when it should be a .com `$ORIGIN example.com.`
 Use fully qualified domain names in the zone, `@     IN  NS      bad.` to `@     IN  NS      bad.example.com.`.
+For the A register, dont use `bad.  IN  A       192.168.57.2`, we need t o remove the period from bad,
+It should look like this: `bad  IN  A       192.168.57.2`.
     
 ### 192.168.57.dns
 
@@ -70,3 +72,24 @@ vagrant@bad:~$ systemctl status bind9
              └─2035 /usr/sbin/named -f -u bind
 
 We can see that it is.
+
+### Test nslookup
+
+vagrant@bad:~$ nslookup bad.example.com localhost
+Server:         localhost
+Address:        ::1#53
+
+Name:   bad.example.com
+Address: 192.168.57.2
+
+we can see that it also works
+
+### Ensuring that everything works with debug commands
+
+vagrant@bad:~$ sudo named-checkconf
+vagrant@bad:~$ sudo named-checkzone example.com /var/lib/bind/example.com.dns
+zone example.com/IN: loaded serial 1
+OK
+
+Because `sudo named-checkconf` didn't returned anything, it means that it has no issues, also, because the seccond command 
+returned that the zone was loaded, we can confirm that everything went how it should had.
