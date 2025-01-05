@@ -1,0 +1,11 @@
+$TTL	604800
+@	IN	SOA	bad.example.com. cletus.example.com. (
+			      1		; Serial
+			 604800		; Refresh
+			    300		; Retry
+			2419200		; Expire
+			 604800 )	; Negative Cache TTL
+;
+@   IN  NS	bad.example.com
+2   IN	PTR	bad.example.com.
+3   IN  PTR     www.example.com.
